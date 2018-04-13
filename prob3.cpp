@@ -1,86 +1,117 @@
 #include <iostream>
+using namespace std;
 
-///EJERCICIO 03--- Merge Sort
-void MergeSort(int inicio,int fin,int *lista){
-    if(fin - inicio == 0 || fin - inicio == 1)/// Se declara una excepcion por si la lista es vacia o de un solo elemento
-        return;                             /// Retorna la misma
-    int medio= (inicio + fin)/2;/// Se define el punto medio de la lista
-    MergeSort(inicio,medio,lista);/// Se divide en sublista a la izquierda
-    MergeSort(medio,fin,lista);/// Se divide en sublista a la derecha
-
-    int puntero1 = inicio,
-        puntero2 = medio,
-        puntero3 = 0;
-
-    int array[fin-inicio];/// Se define la mitad de la lista tomada
-
-    ///Mezclamos las sub-lista de derecha y de izquierda, en el arreglo array.
-    while(puntero1<medio || puntero2<fin){
-        if(puntero1<medio && puntero2<fin){
-            if(lista[puntero1]<lista[puntero2]){
-                array[puntero3++] = lista[puntero1++];
-            }else{
-                array[puntero3++] = lista[puntero2++];
-            }
-        }else if(puntero1<medio){
-            array[puntero3++] = lista[puntero1++];
-        }else{
-            array[puntero3++] = lista[puntero2++];
-        }
-    }
-    for(int i=0;i<fin-inicio;i++){
-        lista[inicio+i]=array[i];
-    }
-}
-///EJERCICIO 03 --- Quick Sort
-
-
-void leeCadena(int cant,int n[])
+void mostrar(int arr[], int x)
 {
-    int i;
-    for(i=0;i<cant;i++)
+    for (int i=0;i<x;i++)
+        cout<<arr[i]<<" ";
+}
+
+//--------------------Insertion Sort---------------------------------
+void insertSort(int arr[], int n)
+{
+   int i, temp, j;
+   for (i = 1; i < n; i++)
+   {
+       temp = arr[i];
+       j = i-1;
+
+       while (j >= 0 && arr[j] > temp)
+       {
+           arr[j+1] = arr[j];
+           j = j-1;
+       }
+       arr[j+1] = temp;
+   }
+}
+
+//--------------------Merge Sort----------------------------------------
+
+void merge(int arr[], int ini, int mid, int fin)
+{
+    int i, j, k;
+    int n1 = mid - ini + 1;
+    int n2 =  fin - mid;
+    int L[n1], R[n2];
+    for (i = 0; i < n1; i++)
+        L[i] = arr[ini + i];
+    for (j = 0; j < n2; j++)
+        R[j] = arr[mid + 1+ j];
+    i = 0;
+    j = 0;
+    k = ini;
+    while (i < n1 && j < n2)
     {
-        cout<<"Ingresa numero "<<i+1<<": ";
-        cin>>n[i];
-    }
-
-}
-
-void muestraCadena(int cant,int n[])
-{
-    int i;
-    for(i=0;i<cant;i++)
-    {
-        cout<<n[i]<<endl;
-    }
-}
-void quicksort(int A[],int izq, int der )
-{
-int i, j, x , aux;
-i = izq;
-j = der;
-x = A[ (izq + der) /2 ];
-    do{
-        while( (A[i] < x) && (j <= der) )
+        if (L[i] <= R[j])
         {
+            arr[k] = L[i];
             i++;
         }
-
-        while( (x < A[j]) && (j > izq) )
+        else
         {
-            j--;
+            arr[k] = R[j];
+            j++;
         }
+        k++;
+    }
+    while (i < n1)
+    {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+    while (j < n2)
+    {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+void mergeSort(int arr[], int ini, int fin)
+{
+    if (ini < fin)
+    {
+        int mid = ini+(fin-ini)/2;
+        mergeSort(arr, ini, mid);
+        mergeSort(arr, mid+1, fin);
+        merge(arr, ini, mid, fin);
+    }
+}
 
-        if( i <= j )
-        {
-            aux = A[i]; A[i] = A[j]; A[j] = aux;
-            i++;  j--;
-        }
+//-------------------------Quick Sort---------------------------------
 
-    }while( i <= j );
-
-    if( izq < j )
-        quicksort( A, izq, j );
-    if( i < der )
-        quicksort( A, i, der );
+void quickSort(int arr[], int izq, int der)
+{
+      int i = izq, j = der;
+      int tmp;
+      int pivot = arr[(izq + der) / 2];
+      while (i <= j) {
+            while (arr[i] < pivot)
+                  i++;
+            while (arr[j] > pivot)
+                  j--;
+            if (i <= j) {
+                  tmp = arr[i];
+                  arr[i] = arr[j];
+                  arr[j] = tmp;
+                  i++;
+                  j--;
+            }
+      };
+      if (izq < j)
+            quickSort(arr, izq, j);
+      if (i < der)
+            quickSort(arr, i, der);
+}
+int main(){
+    int arr1[] = {12, 11, 2, 13, 5, 6};
+    int n = 6;
+    mostrar(arr1, n);
+    cout<<endl;
+    insertSort(arr1, n);
+    //mergeSort(arr1, 0, n - 1);
+    //quickSort(arr1,0,n-1);
+    mostrar(arr1, n);
+    cout<<endl;
+    return 0;
 }
