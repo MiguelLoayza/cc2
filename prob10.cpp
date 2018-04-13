@@ -1,25 +1,50 @@
 #include <iostream>
-
+#include <math.h>
 using namespace std;
 
 
-float enteros(const char *s)
+float cambio(int *cadena,int x,int y)
 {
-	float n = 0;
-	for (; *s != '\0'; s++)
-	{
-    n *= 10;
-    n += *s - '0';
-	}
-  return n;
+    float numero=0.0;
+    for(int i=0;i<(y-1);i++)
+        {
+            numero+=cadena[i]*pow(10,(x-1));
+            x--;
+        }
+    return numero;
 }
+float haciafloat(char *cadena)
+{
+    int posi=0;
+    int cad[posi];
+    int coma=-1,p=0,s=0;
+    float num=0;
 
-int main() {
-  char ab [] = "17824";
-  char *ptr = ab;
-  float no = enteros(ptr);
+    while(cadena[posi]!='\0'){
+        posi++;
+    }
 
-  cout << no << '\n';
+    for(int i=0; i<posi;i++)
+    {
+      if ((cadena[i]-'0')>=0 && (cadena[i]-'0')<=9){
+        cad[p]=cadena[i]-'0';
+        p++;
+      }
+      else if (cadena[i]-'0'== -4){
+        coma=p;
+      }
+      else
+          s++;
+    }
 
 
+    cout<<endl;
+    num=cambio(cad,coma,posi-s);
+    return num;
+}
+int main()
+{
+    char *cadena="1123,34";
+    cout<<haciafloat(cadena)<<endl;
+    return 0;
 }
